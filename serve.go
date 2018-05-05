@@ -27,8 +27,12 @@ func main() {
 	if port == "" {
 		port = "5000"
 	}
+	dbURL := os.Getenv("DBURL")
+	if dbURL == "" {
+		dbURL = "127.0.0.1"
+	}
 
-	session, err := mgo.Dial("127.0.0.1:27017")
+	session, err := mgo.Dial(dbURL)
 	check(err)
 	defer session.Close()
 	c = session.DB("db").C("points")
