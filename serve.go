@@ -37,11 +37,25 @@ func main() {
 	defer session.Close()
 	c = session.DB("db").C("points")
 
+	http.HandleFunc("/", root)
+
 	http.HandleFunc("/insert", insert)
 	http.HandleFunc("/find", find)
 	http.HandleFunc("/remove", remove)
 	fmt.Println("Serving on port:", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
+}
+
+func root(w http.ResponseWriter, r *http.Request) {
+
+	readCookie, _ := r.Cookie("csID")
+	fmt.Println("readCookie:", readCookie)
+
+	http.SetCookie(w, &http.Cookie{Name: "csID", Value: "def456"})
+	r.ParseForm()
+	fmt.Println(r.Form)
+
+	io.WriteString(w, " ")
 }
 
 func insert(w http.ResponseWriter, r *http.Request) {
